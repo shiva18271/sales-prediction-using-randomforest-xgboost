@@ -1,6 +1,6 @@
 import google.generativeai as genai
 
-genai.configure(api_key="AIzaSyD5oIp0iZ_P5e8ZHZhndqJF5SnjzqsjZoQ") # Replace YOUR_API_KEY
+genai.configure(api_key="Replace YOUR_API_KEY") # Replace with your actual API key
 
 models = genai.list_models()
 for model in models:
