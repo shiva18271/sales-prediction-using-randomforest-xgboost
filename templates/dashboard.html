@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Sales Dashboard{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-emphasis">📊 Sales Performance Dashboard</h2>
+        <div class="mx-auto theme-divider" style="height: 3px; width: 80px;"></div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        {% for metric in [
+            {"icon": "fa-wallet", "title": "Total Sales", "value": total_sales, "color": "text-success"},
+            {"icon": "fa-chart-line", "title": "Average Sales", "value": avg_sales, "color": "text-primary"},
+            {"icon": "fa-user-tie", "title": "Unemployment Impact", "value": avg_unemployment, "color": "text-warning"}
+        ] %}
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0 h-100 theme-card">
+                <div class="card-body text-center p-4">
+                    <div class="theme-icon-bg rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
+                        <i class="fas {{ metric.icon }} fa-lg {{ metric.color }}"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2 text-emphasis">{{ metric.title }}</h5>
+                    <p class="display-6 fw-bold {{ metric.color }} mb-0">{{ metric.value }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="row g-4">
+        {% for viz in [
+            {"icon": "fa-calendar-alt", "title": "Monthly Sales Trends", "url": sales_trends_url},
+            {"icon": "fa-store", "title": "Store Sales Performance", "url": store_sales_url},
+            {"icon": "fa-gift", "title": "Holiday vs Non-Holiday Sales", "url": holiday_sales_url},
+            {"icon": "fa-temperature-high", "title": "Temperature vs Sales", "url": temp_sales_url},
+            {"icon": "fa-gas-pump", "title": "Fuel Price Impact", "url": fuel_sales_url},
+            {"icon": "fa-chart-pie", "title": "CPI vs Sales", "url": cpi_sales_url}
+        ] %}
+        <div class="col-lg-6">
+            <div class="card shadow-lg border-0 h-100 theme-card">
+                <div class="card-header theme-card-header py-3 d-flex align-items-center">
+                    <i class="fas {{ viz.icon }} text-primary me-2 fs-5"></i>
+                    <h5 class="fw-bold mb-0 text-emphasis">{{ viz.title }}</h5>
+                </div>
+                <div class="card-body p-0">
+                    <iframe src="{{ viz.url }}" width="100%" height="400" style="border:none;"></iframe>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .text-emphasis {
+        color: var(--bs-emphasis-color) !important;
+    }
+    
+    .theme-divider {
+        background: linear-gradient(
+            to right, 
+            var(--bs-secondary-bg), 
+            var(--bs-emphasis-color), 
+            var(--bs-secondary-bg)
+        ) !important;
+    }
+    
+    .theme-card {
+        transition: all 0.3s ease;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--bs-border-color);
+        background-color: var(--bs-body-bg);
+    }
+    
+    .theme-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.1) !important;
+    }
+    
+    .theme-card-header {
+        background-color: var(--bs-secondary-bg) !important;
+        border-bottom: 1px solid var(--bs-border-color) !important;
+    }
+    
+    .theme-icon-bg {
+        background-color: var(--bs-secondary-bg) !important;
+    }
+    
+    iframe {
+        border-radius: 0 0 12px 12px;
+    }
+    
+    .display-6 {
+        font-size: 2rem;
+    }
+
+    [data-bs-theme="dark"] .card:hover {
+        box-shadow: 0 12px 24px rgba(0,0,0,0.3) !important;
+    }
+</style>
+{% endblock %}

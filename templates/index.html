@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Home - Sales Prediction{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="home-hero-section">
+    <div class="container">
+        <div class="home-hero-content text-center">
+            <h1 class="home-hero-title" data-aos="fade-up">Welcome to Sales Prediction</h1>
+            <p class="home-hero-text" data-aos="fade-up" data-aos-delay="100">
+                Transform your sales data into actionable insights with our advanced prediction system.
+            </p>
+            <a href="/upload" class="home-cta-btn btn" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-upload me-2"></i> Upload Sales Data
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="features mb-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4" data-aos="fade-up">
+                <div class="home-feature-card">
+                    <div class="home-feature-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <h3 class="home-feature-title">Easy Data Upload</h3>
+                    <p class="text-muted home-text-muted">Upload your sales data effortlessly in CSV format with our intuitive interface.</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="home-feature-card">
+                    <div class="home-feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="home-feature-title">Smart Forecasting</h3>
+                    <p class="text-muted home-text-muted">Advanced algorithms analyze trends and provide reliable sales predictions.</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="home-feature-card">
+                    <div class="home-feature-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3 class="home-feature-title">Insightful Analytics</h3>
+                    <p class="text-muted home-text-muted">Visualize trends and gain valuable insights to make data-driven decisions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="home-how-it-works">
+    <div class="container">
+        <h2 class="text-center home-section-title" data-aos="fade-up" style="color: var(--bs-emphasis-color);">How It Works</h2>
+        <div class="row">
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="home-step">
+                    <div class="home-step-number">1</div>
+                    <h4 class="home-step-title">Upload Data</h4>
+                    <p class="text-muted home-text-muted">Provide your historical sales data in CSV format with required columns.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="home-step">
+                    <div class="home-step-number">2</div>
+                    <h4 class="home-step-title">Analyze Trends</h4>
+                    <p class="text-muted home-text-muted">Our system processes your data and detects important patterns.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="home-step">
+                    <div class="home-step-number">3</div>
+                    <h4 class="home-step-title">View Predictions</h4>
+                    <p class="text-muted home-text-muted">Get detailed forecasts with interactive visualizations.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                <div class="home-step">
+                    <div class="home-step-number">4</div>
+                    <h4 class="home-step-title">Improve Strategy</h4>
+                    <p class="text-muted home-text-muted">Use actionable insights to refine your business decisions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+{% endblock %}

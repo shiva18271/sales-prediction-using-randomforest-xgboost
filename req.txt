@@ -1,0 +1,10 @@
+flask
+numpy
+pandas
+scikit-learn
+matplotlib
+seaborn
+plotly
+xgboost
+werkzeug
+google-generativeai

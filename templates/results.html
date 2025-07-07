@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% block title %}Sales Predictions{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+
+    <div class="text-center mb-4">
+        <h2 class="fw-bold">📈 Sales Predictions</h2>
+        <p class="text-muted">Generated predictions for your uploaded data</p>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white py-2 d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Predicted Sales</h4>
+            <button class="btn btn-sm btn-outline-light" id="togglePredictionsBtn">
+                <i class="fas fa-eye me-1"></i>
+                <span>Show Additional Models</span>
+            </button>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Store</th>
+                            <th>Date</th>
+                            <th>XGBoost</th>
+                            <th class="additional-prediction" style="display:none;">Random Forest</th>
+                            <th class="additional-prediction" style="display:none;">Linear Regression</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in data %}
+                        <tr>
+                            <td>{{ row['Store'] }}</td>
+                            <td>{{ row['Date'] }}</td>
+                            <td class="fw-semibold">{{ row['XGBoost_Prediction'] | round(2) }}</td>
+                            <td class="additional-prediction" style="display:none;">{{ row['Random Forest_Prediction'] | round(2) }}</td>
+                            <td class="additional-prediction" style="display:none;">{{ row['Linear Regression_Prediction'] | round(2) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white py-2">
+            <button class="btn btn-sm btn-outline-light" id="toggleMetricsBtn">
+                <i class="fas fa-chart-bar me-1"></i>
+                <span>Show Model Performance</span>
+            </button>
+        </div>
+        <div class="card-body p-0" id="modelMetrics" style="display:none;">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Model</th>
+                            <th>R²</th>
+                            <th>RMSE</th>
+                            <th>MAE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for model_name, metric in metrics.items() %}
+                        <tr>
+                            <td class="fw-semibold">{{ model_name }}</td>
+                            <td>{{ metric['R2'] | round(2) }}</td>
+                            <td>{{ metric['RMSE'] | round(2) }}</td>
+                            <td>{{ metric['MAE'] | round(2) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white py-2">
+            <button class="btn btn-sm btn-outline-light" id="toggleVisualizationsBtn">
+                <i class="fas fa-chart-pie me-1"></i>
+                <span>Show Visual Insights</span>
+            </button>
+        </div>
+        <div class="card-body p-0" id="visualizationsSection" style="display:none;">
+            <div class="text-center my-4">
+                <h4 class="fw-bold text-emphasis">📊 Visual Insights from Predictions</h4>
+                <div class="mx-auto theme-divider" style="height: 3px; width: 80px;"></div>
+            </div>
+            <div class="row g-4 p-3">
+                {% for key, title, icon in [
+                    ('store_comparison', 'Store-wise Predictions', 'fa-store'),
+                    ('model_comparison', 'Model Performance Comparison', 'fa-chart-line')
+                ] %}
+                {% if graphs[key] %}
+                <div class="col-lg-6">
+                    <div class="card shadow border-0 h-100">
+                        <div class="card-header bg-light py-2 d-flex align-items-center">
+                            <i class="fas {{ icon }} text-primary me-2 fs-5"></i>
+                            <h5 class="fw-bold mb-0">{{ title }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="graph-container" style="overflow-x:auto; overflow-y:auto;">
+                                {{ graphs[key] | safe }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const togglePredictionsBtn = document.getElementById('togglePredictionsBtn');
+    const additionalPredictions = document.querySelectorAll('.additional-prediction');
+    
+    togglePredictionsBtn.addEventListener('click', function() {
+        const isHidden = additionalPredictions[0].style.display === 'none';
+        additionalPredictions.forEach(col => {
+            col.style.display = isHidden ? 'table-cell' : 'none';
+        });
+        togglePredictionsBtn.querySelector('span').textContent = isHidden 
+            ? 'Hide Additional Models' 
+            : 'Show Additional Models';
+    });
+
+    const toggleMetricsBtn = document.getElementById('toggleMetricsBtn');
+    const modelMetrics = document.getElementById('modelMetrics');
+    
+    toggleMetricsBtn.addEventListener('click', function() {
+        const isHidden = modelMetrics.style.display === 'none';
+        modelMetrics.style.display = isHidden ? 'block' : 'none';
+        toggleMetricsBtn.querySelector('span').textContent = isHidden 
+            ? 'Hide Model Performance' 
+            : 'Show Model Performance';
+    });
+
+    const toggleVisualizationsBtn = document.getElementById('toggleVisualizationsBtn');
+    const visualizationsSection = document.getElementById('visualizationsSection');
+    
+    toggleVisualizationsBtn.addEventListener('click', function() {
+        const isHidden = visualizationsSection.style.display === 'none';
+        visualizationsSection.style.display = isHidden ? 'block' : 'none';
+        toggleVisualizationsBtn.querySelector('span').textContent = isHidden 
+            ? 'Hide Visual Insights' 
+            : 'Show Visual Insights';
+    });
+});
+</script>
+
+<style>
+    .text-emphasis {
+        color: #333;
+    }
+    .theme-divider {
+        background-color: #007bff;
+        border-radius: 3px;
+    }
+    .theme-icon-bg {
+        background-color: rgba(0, 123, 255, 0.1);
+    }
+    .theme-card-header {
+        background-color: #f8f9fa;
+    }
+    .card {
+        border-radius: 10px;
+    }
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.03);
+    }
+    .btn-outline-light:hover {
+        color: #212529 !important;
+    }
+    .graph-container > div {
+        width: 100% !important;
+        height: auto !important;
+    }
+    .graph-container .plot-container {
+        width: 100% !important;
+    }
+    @media (max-width: 768px) {
+        .graph-container {
+            overflow-x: auto;
+        }
+    }
+</style>
+{% endblock %}

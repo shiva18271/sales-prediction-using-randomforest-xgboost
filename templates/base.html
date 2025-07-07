@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sales Prediction{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <nav class="base-navbar navbar navbar-expand-lg navbar-dark shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <i class="fas fa-chart-line me-2"></i>
+                <span class="fw-bold">Sales Prediction</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="base-nav-link nav-link" href="/"><i class="fas fa-home me-1"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="base-nav-link nav-link" href="/upload"><i class="fas fa-upload me-1"></i> Upload Data</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="base-nav-link nav-link" href="/dashboard"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="base-nav-link nav-link" href="/comparison"><i class="fas fa-chart-bar me-1"></i> Comparison</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="base-nav-link nav-link" href="/recommendations"><i class="fas fa-lightbulb me-1"></i> Recommendations</a>
+                    </li>
+                </ul>
+                <div class="base-theme-toggle-container">
+                    <button id="themeToggle" class="base-theme-toggle-btn" title="Toggle theme">
+                        <i class="fas fa-sun light-icon"></i>
+                        <i class="fas fa-moon dark-icon"></i>
+                    </button>
+                    <button id="resetBtn" class="btn btn-danger btn-sm ms-2">
+                        <i class="fas fa-trash-alt me-1"></i> Reset Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        <i class="fas {% if category == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %} me-2"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <main class="flex-grow-1">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="base-footer bg-dark text-white py-3 mt-auto">
+        <div class="container">
+            <div class="row align-items-center g-3">
+                <div class="col-md-8">
+                    <h6 class="mb-0"><i class="fas fa-chart-line me-2"></i>Sales Prediction</h6>
+                    <small class="text-muted">Advanced sales forecasting analytics</small>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <small class="text-muted"> .</small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const htmlElement = document.documentElement;
+
+            const savedTheme = localStorage.getItem('theme') || 
+                              (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            htmlElement.setAttribute('data-bs-theme', savedTheme);
+
+            themeToggle.style.visibility = 'visible';
+            themeToggle.style.opacity = '1';
+            
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = htmlElement.getAttribute('data-bs-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+                htmlElement.setAttribute('data-bs-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+            });
+
+            const resetBtn = document.getElementById("resetBtn");
+            if (resetBtn) {
+                resetBtn.addEventListener("click", function() {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "This will delete all uploaded CSV files!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire({
+                                title: 'Processing...',
+                                html: 'Please wait while we delete your files.',
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading()
+                                }
+                            });
+                            
+                            fetch("/reset", { 
+                                method: "POST"
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.text().then(text => {
+                                    try {
+                                        return text ? JSON.parse(text) : {}
+                                    } catch {
+                                        return { message: text || 'Files deleted successfully' }
+                                    }
+                                });
+                            })
+                            .then(data => {
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: data.message || 'Files deleted successfully',
+                                    icon: 'success'
+                                }).then(() => {
+                                    if (data.redirect) {
+                                        window.location.href = data.redirect;
+                                    } else {
+                                        window.location.reload();
+                                    }
+                                });
+                            })
+                            .catch(error => {
+                                console.error("Error:", error);
+                                Swal.fire({
+                                    title: 'Completed',
+                                    text: 'Files were deleted, but there was an issue with the response: ' + error.message,
+                                    icon: 'info'
+                                }).then(() => {
+                                    window.location.reload();
+                                });
+                            });
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

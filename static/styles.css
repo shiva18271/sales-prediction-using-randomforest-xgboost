@@ -1,0 +1,34 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.card {
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.03);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.btn {
+    border-radius: 50px;
+}
+
+.table {
+    margin-top: 20px;
+}
+
+.text-center {
+    margin-top: 30px;
+}

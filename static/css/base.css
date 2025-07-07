@@ -1,0 +1,107 @@
+/* Base Template Styles */
+.base-theme-toggle-container {
+    display: flex;
+    align-items: center;
+    margin-left: 1rem;
+}
+
+.base-theme-toggle-btn {
+    border: none;
+    background: transparent;
+    color: white;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.base-theme-toggle-btn:hover {
+    transform: scale(1.1);
+    color: #f8f9fa;
+}
+
+[data-bs-theme="dark"] .base-theme-toggle-btn .light-icon,
+[data-bs-theme="light"] .base-theme-toggle-btn .dark-icon {
+    display: none;
+}
+
+/* Dark Mode Styles */
+[data-bs-theme="dark"] {
+    background-color: #121212;
+}
+
+[data-bs-theme="dark"] .base-navbar {
+    background-color: #1a1a1a !important;
+    position: relative;
+}
+
+[data-bs-theme="dark"] .base-navbar::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        rgba(56, 103, 214, 0.8) 0%, 
+        rgba(102, 51, 153, 0.8) 100%);
+    box-shadow: 0 4px 12px rgba(56, 103, 214, 0.3);
+}
+
+[data-bs-theme="dark"] .base-footer {
+    background-color: #1a1a1a !important;
+    position: relative;
+}
+
+[data-bs-theme="dark"] .base-footer::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        rgba(56, 103, 214, 0.8) 0%, 
+        rgba(102, 51, 153, 0.8) 100%);
+    box-shadow: 0 -4px 12px rgba(56, 103, 214, 0.3);
+}
+
+[data-bs-theme="dark"] .base-card {
+    background-color: #1e1e1e;
+    border: 1px solid #2e2e2e;
+    color: #f8f9fa;
+}
+
+[data-bs-theme="dark"] .base-table {
+    --bs-table-bg: #1e1e1e;
+    --bs-table-striped-bg: #252525;
+    --bs-table-hover-bg: #2e2e2e;
+    color: #f8f9fa;
+}
+
+/* Light Mode Styles */
+[data-bs-theme="light"] {
+    background-color: #f8f9fa;
+}
+
+/* Navbar (always dark) */
+.base-navbar {
+    background-color: #212529 !important;
+    --bs-navbar-color: rgba(255, 255, 255, 0.75);
+    --bs-navbar-hover-color: rgba(255, 255, 255, 0.9);
+    --bs-navbar-active-color: #fff;
+}
+
+.base-footer {
+    background-color: #212529 !important;
+}
+
+.base-nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.base-nav-link:hover {
+    color: white !important;
+}

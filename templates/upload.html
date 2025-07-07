@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Upload Sales Data{% endblock %}
+
+{% block content %}
+<div class="container d-flex flex-column" style="min-height: 80vh; padding-bottom: 4rem;"> 
+    <div class="row justify-content-center align-items-center my-auto">
+        <div class="col-lg-8 col-md-10"> 
+           
+            <div class="card border-0 shadow rounded-1">
+                <div class="card-header bg-dark text-white py-3">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <i class="fas fa-file-upload me-2"></i>
+                        <h4 class="mb-0">Upload Sales Data</h4>
+                    </div>
+                </div>
+                <div class="card-body p-4 p-lg-5"> 
+                    <div class="text-center mb-4">
+                        <i class="fas fa-file-csv fa-2x text-muted mb-3"></i>
+                        <p class="text-muted lead"> 
+                            Upload your CSV file containing sales data
+                        </p>
+                    </div>
+
+                
+                    <form action="/upload" method="post" enctype="multipart/form-data">
+                        <div class="mb-4">
+                            <label for="fileInput" class="form-label fw-semibold">Select CSV File</label>
+                            <input type="file" class="form-control form-control-lg" id="fileInput" name="file" accept=".csv" required>  <!-- Larger input -->
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success py-3">  
+                                <i class="fas fa-upload me-2"></i> Upload File
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer bg-light py-3">
+                    <h5 class="text-center mb-3 fw-semibold">Required Columns</h5>
+                    <div class="row">  
+                        <div class="col-md-6">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item small">Store</li>
+                                <li class="list-group-item small">Date</li>
+                                <li class="list-group-item small">Holiday_Flag</li>
+                                <li class="list-group-item small">Temperature</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item small">Fuel_Price</li>
+                                <li class="list-group-item small">CPI</li>
+                                <li class="list-group-item small">Unemployment</li>
+                                <li class="list-group-item small">&nbsp;</li>  
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+    .card {
+        transition: all 0.3s ease;
+        border-radius: 10px;
+    }
+    .card:hover {
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15) !important;  
+        transform: translateY(-5px);  
+    }
+    .list-group-item {
+        padding: 0.75rem 1.25rem;
+        border-color: rgba(0,0,0,0.08);
+    }
+    .form-control-lg {
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+    }
+    .rounded-1 {
+        border-radius: 10px; 
+    }
+</style>
+{% endblock %}
